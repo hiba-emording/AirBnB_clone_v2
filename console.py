@@ -113,40 +113,43 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, arg):
         """ Create an object of any class"""
-        if not args:
+        if not arg:
             print("** class name missing **")
             return
-        args = args.split()
-        if args[0] not in HBNBCommand.classes:
+
+        args = arg.split()
+
+        class_name = args[0]
+        if class_name not in self.classes:
             print("** class doesn't exist **")
             return
-        params = args[1:]
-        if not params:
-            print("** parameter missing **")
-            return
-        parameter = {}
-        for param in params:
-            key, val = tuple(param.split("="))
-            if val[0] == '"':
-                val = val.strip('"').replace("_", " ")
+
+        params = {}
+        for param in args[1:]:
+            key_value = param.split('=')
+            if len(key_value) != 2:
+                continue
+            key, value = key_value
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('_', ' ')
+            elif '.' in value:
+                try:
+                    value = float(value)
+                except ValueError:
+                    continue
             else:
                 try:
-                    if "." in val:
-                        val = float(val)
-                    else:
-                        val = int(val)
-                except (SyntaxError, NameError, ValueError):
+                    value = int(value)
+                except ValueError:
                     continue
-                parameter[key] = val
-            if parameter == {}:
-                obj = eval(args[0])()
-            else:
-                obj = eval(args[0])(**parameter)
-                storage.new(obj)
-            print(obj.id)
-            obj.save()
+            params[key] = value
+
+        obj = self.classes[class_name](**params)
+        storage.new(obj)
+        storage.save()
+        print(obj.id)
 
     def help_create(self):
         """ Help information for the create method """
