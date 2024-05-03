@@ -9,7 +9,7 @@ sudo apt -y install nginx
 sudo mkdir -p /data/web_static/{releases/test,shared}
 
 # Create a fake HTML file for testing
-sudo echo "Dying is easy young man, living is harder" > /data/web_static/releases/test/index.html
+echo "Dying is easy young man, living is harder" > /data/web_static/releases/test/index.html
 
 # Remove existing symbolic link and create a new one
 sudo rm -rf /data/web_static/current
