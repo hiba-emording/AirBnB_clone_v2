@@ -11,17 +11,21 @@ env.key_filename = '~/.ssh/id_rsa'
 
 
 def do_clean(number=0):
-    """Delete out-of-date archives."""
-    number = int(number)
-    if number < 1:
-        number = 1
+    """
+    Delete out-of-date archives.
 
+    Args:
+        number (int): The number of archives to keep.
+    """
+    number = 1 if int(number) == 0 else int(number)
+
+    archives = sorted(os.listdir("versions"))
+    [archives.pop() for i in range(number)]
     with lcd("versions"):
-        archives = local("ls -t", capture=True).split()
-        for archive in archives[number:]:
-            local("rm -f {}".format(archive))
+        [local("rm ./{}".format(a)) for a in archives]
 
     with cd("/data/web_static/releases"):
-        releases = run("ls -t").split()
-        for release in releases[number:]:
-            run("rm -rf {}".format(release))
+        archives = run("ls -tr").split()
+        archives = [a for a in archives if "web_static_" in a]
+        [archives.pop() for i in range(number)]
+        [run("rm -rf ./{}".format(a)) for a in archives]
