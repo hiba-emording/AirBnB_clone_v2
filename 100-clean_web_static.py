@@ -18,11 +18,10 @@ def do_clean(number=0):
 
     with lcd("versions"):
         archives = local("ls -t", capture=True).split()
-
-    for archive in archives[number:]:
-        local("rm -f versions/{}".format(archive))
+        for archive in archives[number:]:
+            local("rm -f {}".format(archive))
 
     with cd("/data/web_static/releases"):
         releases = run("ls -t").split()
         for release in releases[number:]:
-            run("rm -rf /data/web_static/releases/{}".format(release))
+            run("rm -rf {}".format(release))
