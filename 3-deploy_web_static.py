@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """Fabric script to create and distribute an archive to web servers"""
 
-from fabric.api import run, env, put
+from fabric.api import local, run, env, put
 from os.path import exists
+from datetime import datetime
 
 
 env.hosts = ['18.204.7.236', '52.91.128.49']
@@ -12,9 +13,6 @@ env.key_filename = '~/.ssh/id_rsa'
 
 def do_pack():
     """Create a compressed archive of the web_static folder."""
-    from fabric.api import local
-    from datetime import datetime
-
     try:
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         local("mkdir -p versions")
