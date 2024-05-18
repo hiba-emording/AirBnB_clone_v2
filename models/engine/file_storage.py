@@ -64,3 +64,7 @@ class FileStorage:
             FileStorage.__objects.pop(obj_key)
         else:
             pass
+
+    def close(self):
+        """Close the file storage"""
+        self.reload()
